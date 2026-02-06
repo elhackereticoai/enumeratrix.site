@@ -6,20 +6,17 @@
     <title>Manuel Gutiérrez | Desarrollo Web & Ciberseguridad</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #2d3748;
-            --secondary: #4a5568;
-            --accent: #3182ce;
-            --accent-bright: #4299e1;
-            --danger: #e53e3e;
-            --success: #48bb78;
-            --bg-light: #f7fafc;
-            --bg-white: #ffffff;
-            --text-dark: #1a202c;
-            --text-gray: #718096;
-            --border: #e2e8f0;
+            --primary: #2d3561;
+            --secondary: #5b6cad;
+            --accent: #f39c12;
+            --dark: #1a1d2e;
+            --light: #f4f6f9;
+            --text: #2c3e50;
+            --text-light: #7f8c8d;
+            --success: #27ae60;
         }
         
         * {
@@ -29,27 +26,22 @@
         }
         
         body {
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Poppins', sans-serif;
             line-height: 1.6;
-            color: var(--text-dark);
-            background: var(--bg-light);
+            color: var(--text);
+            background: var(--light);
+            overflow-x: hidden;
         }
         
         /* Navigation */
         nav {
             position: fixed;
-            top: 0;
             width: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            top: 0;
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
             z-index: 1000;
-            animation: slideDown 0.5s ease-out;
-        }
-        
-        @keyframes slideDown {
-            from { transform: translateY(-100%); }
-            to { transform: translateY(0); }
+            backdrop-filter: blur(10px);
         }
         
         .nav-container {
@@ -62,10 +54,10 @@
         }
         
         .logo {
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             font-weight: 900;
             color: var(--primary);
-            letter-spacing: -0.5px;
+            letter-spacing: -1px;
         }
         
         .logo span {
@@ -74,14 +66,14 @@
         
         .nav-links {
             display: flex;
-            gap: 2.5rem;
             list-style: none;
+            gap: 2.5rem;
         }
         
         .nav-links a {
-            color: var(--text-dark);
+            color: var(--text);
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 500;
             font-size: 0.95rem;
             transition: color 0.3s;
             position: relative;
@@ -108,196 +100,267 @@
         
         /* Hero Section */
         .hero {
-            margin-top: 80px;
-            padding: 6rem 2rem;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            text-align: center;
             position: relative;
             overflow: hidden;
+            padding-top: 80px;
         }
         
         .hero::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><rect width="2" height="2" fill="white" opacity="0.1"/></svg>') repeat;
-            opacity: 0.3;
+            width: 600px;
+            height: 600px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+            top: -200px;
+            right: -200px;
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 50%;
+            bottom: -100px;
+            left: -100px;
+            animation: float 15s infinite ease-in-out reverse;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(30px, 30px) rotate(5deg); }
         }
         
         .hero-content {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
+            padding: 0 2rem;
             position: relative;
             z-index: 1;
-            animation: fadeInUp 0.8s ease-out;
         }
         
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .hero-text {
+            max-width: 700px;
         }
         
-        .hero h1 {
-            font-size: 3.5rem;
+        .hero-tag {
+            display: inline-block;
+            padding: 0.5rem 1.2rem;
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: slideInLeft 0.8s ease-out;
+        }
+        
+        h1 {
+            font-size: 4rem;
             font-weight: 900;
-            margin-bottom: 1rem;
-            letter-spacing: -1px;
+            color: white;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            animation: slideInLeft 0.8s ease-out 0.2s backwards;
         }
         
-        .hero .subtitle {
-            font-size: 1.4rem;
-            margin-bottom: 0.5rem;
-            font-weight: 300;
-        }
-        
-        .hero .tagline {
-            font-size: 1.1rem;
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: rgba(255,255,255,0.9);
             margin-bottom: 2.5rem;
-            opacity: 0.9;
-            font-weight: 400;
+            line-height: 1.8;
+            animation: slideInLeft 0.8s ease-out 0.4s backwards;
         }
         
         .cta-buttons {
             display: flex;
             gap: 1.5rem;
-            justify-content: center;
-            flex-wrap: wrap;
+            animation: slideInLeft 0.8s ease-out 0.6s backwards;
         }
         
         .btn {
             padding: 1rem 2.5rem;
-            border: none;
             border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
             text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
             display: inline-block;
+            border: none;
+            cursor: pointer;
         }
         
         .btn-primary {
-            background: white;
-            color: var(--accent);
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.3);
         }
         
         .btn-primary:hover {
+            background: #e67e22;
             transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 15px 40px rgba(243, 156, 18, 0.4);
         }
         
         .btn-secondary {
-            background: transparent;
+            background: rgba(255,255,255,0.2);
             color: white;
             border: 2px solid white;
+            backdrop-filter: blur(10px);
         }
         
         .btn-secondary:hover {
             background: white;
-            color: var(--accent);
-        }
-        
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-        
-        /* Section */
-        section {
-            padding: 5rem 0;
-        }
-        
-        .section-title {
-            font-size: 2.5rem;
-            font-weight: 900;
-            text-align: center;
-            margin-bottom: 1rem;
             color: var(--primary);
         }
         
-        .section-subtitle {
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        /* Section Styling */
+        section {
+            padding: 6rem 2rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
             text-align: center;
-            color: var(--text-gray);
-            max-width: 600px;
-            margin: 0 auto 4rem;
+            margin-bottom: 4rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+        
+        .section-title p {
+            color: var(--text-light);
             font-size: 1.1rem;
+            max-width: 600px;
+            margin: 1.5rem auto 0;
         }
         
         /* Services Grid */
         .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 2.5rem;
-            animation: fadeInUp 0.8s ease-out 0.2s backwards;
         }
         
         .service-card {
-            background: var(--bg-white);
+            background: white;
             padding: 2.5rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s;
-            border: 2px solid transparent;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s;
+        }
+        
+        .service-card:hover::before {
+            transform: scaleX(1);
         }
         
         .service-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-            border-color: var(--accent);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
         }
         
         .service-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-bright) 100%);
-            border-radius: 12px;
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--accent), #e67e22);
+            border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
+            font-size: 2rem;
             margin-bottom: 1.5rem;
-            color: white;
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.3);
         }
         
         .service-card h3 {
-            font-size: 1.4rem;
-            margin-bottom: 1rem;
+            font-size: 1.5rem;
             color: var(--primary);
+            margin-bottom: 1rem;
+            font-weight: 700;
         }
         
         .service-card p {
-            color: var(--text-gray);
+            color: var(--text-light);
             line-height: 1.8;
             margin-bottom: 1.5rem;
         }
         
         .service-features {
             list-style: none;
+            padding: 0;
         }
         
         .service-features li {
             padding: 0.5rem 0;
-            color: var(--text-gray);
+            color: var(--text);
             font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
         }
         
         .service-features li::before {
-            content: "✓";
+            content: '✓';
             color: var(--success);
             font-weight: bold;
-            margin-right: 0.5rem;
+            font-size: 1.2rem;
         }
         
         /* Skills Section */
@@ -307,224 +370,238 @@
             gap: 3rem;
         }
         
-        .skills-category {
-            background: var(--bg-white);
-            padding: 2.5rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
-        
         .skills-category h3 {
             font-size: 1.5rem;
-            margin-bottom: 1.5rem;
             color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .skill-item {
+            margin-bottom: 1.5rem;
+        }
+        
+        .skill-header {
             display: flex;
-            align-items: center;
-            gap: 0.8rem;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
         }
         
-        .skills-category h3::before {
-            content: '';
-            width: 4px;
-            height: 30px;
-            background: var(--accent);
-            border-radius: 2px;
-        }
-        
-        .skills-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-        }
-        
-        .skill-tag {
-            padding: 0.6rem 1.2rem;
-            background: var(--bg-light);
-            border: 2px solid var(--border);
-            border-radius: 25px;
-            font-size: 0.9rem;
+        .skill-name {
             font-weight: 600;
-            color: var(--text-dark);
-            transition: all 0.3s;
+            color: var(--text);
         }
         
-        .skill-tag:hover {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
-            transform: translateY(-2px);
+        .skill-level {
+            color: var(--accent);
+            font-weight: 600;
+            font-family: 'Fira Code', monospace;
+        }
+        
+        .skill-bar {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .skill-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            border-radius: 10px;
+            transition: width 1s ease-out;
         }
         
         /* About Section */
-        .about-content {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 4rem;
-            align-items: center;
+        #quien-soy {
+            background: white;
         }
         
-        .about-image {
-            width: 100%;
-            max-width: 300px;
-            height: 300px;
-            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-bright) 100%);
-            border-radius: 12px;
-            display: flex;
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
             align-items: center;
-            justify-content: center;
-            font-size: 8rem;
-            color: white;
-            box-shadow: 0 10px 40px rgba(49, 130, 206, 0.3);
         }
         
         .about-text h3 {
             font-size: 2rem;
-            margin-bottom: 1rem;
             color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
         }
         
         .about-text p {
-            color: var(--text-gray);
-            line-height: 1.8;
+            color: var(--text-light);
             margin-bottom: 1.5rem;
+            line-height: 1.8;
             font-size: 1.05rem;
         }
         
-        .info-list {
-            list-style: none;
+        .about-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
             margin-top: 2rem;
         }
         
-        .info-list li {
-            padding: 0.8rem 0;
+        .stat-box {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            border-left: 4px solid var(--accent);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--primary);
+            display: block;
+        }
+        
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        .about-info {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 3rem;
+            border-radius: 20px;
+            color: white;
+        }
+        
+        .info-item {
             display: flex;
             align-items: center;
             gap: 1rem;
-            color: var(--text-dark);
-            border-bottom: 1px solid var(--border);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
         
-        .info-list li strong {
-            min-width: 120px;
-            color: var(--primary);
+        .info-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
         }
         
-        .info-list li a {
-            color: var(--accent);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .info-list li a:hover {
-            color: var(--accent-bright);
-        }
-        
-        /* Process Section */
-        .process-steps {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-        
-        .process-step {
-            text-align: center;
-            position: relative;
-        }
-        
-        .process-step::after {
-            content: '→';
-            position: absolute;
-            right: -1.5rem;
-            top: 30px;
-            font-size: 2rem;
-            color: var(--accent);
-            opacity: 0.3;
-        }
-        
-        .process-step:last-child::after {
-            display: none;
-        }
-        
-        .step-number {
-            width: 60px;
-            height: 60px;
-            background: var(--accent);
-            color: white;
-            border-radius: 50%;
+        .info-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
-            font-weight: 900;
-            margin: 0 auto 1rem;
+            flex-shrink: 0;
         }
         
-        .process-step h4 {
+        .info-content {
+            flex: 1;
+        }
+        
+        .info-label {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-bottom: 0.3rem;
+        }
+        
+        .info-value {
             font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-            color: var(--primary);
+            font-weight: 600;
         }
         
-        .process-step p {
-            color: var(--text-gray);
-            font-size: 0.9rem;
-        }
-        
-        /* Contact Section */
-        .contact-section {
-            background: var(--primary);
-            color: white;
-        }
-        
-        .contact-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-        }
-        
-        .contact-info h3 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-        
-        .contact-info p {
-            margin-bottom: 2rem;
-            opacity: 0.9;
-            line-height: 1.8;
-        }
-        
-        .contact-methods {
-            list-style: none;
-        }
-        
-        .contact-methods li {
-            padding: 1rem 0;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            font-size: 1.05rem;
-        }
-        
-        .contact-methods li span {
-            font-size: 1.5rem;
-        }
-        
-        .contact-methods a {
+        .info-value a {
             color: white;
             text-decoration: none;
             transition: opacity 0.3s;
         }
         
-        .contact-methods a:hover {
+        .info-value a:hover {
+            opacity: 0.8;
+        }
+        
+        /* Contact Section */
+        #contacto {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+        
+        #contacto .section-title h2 {
+            color: white;
+        }
+        
+        #contacto .section-title h2::after {
+            background: var(--accent);
+        }
+        
+        #contacto .section-title p {
+            color: rgba(255,255,255,0.9);
+        }
+        
+        .contact-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .contact-methods {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .contact-method {
+            background: rgba(255,255,255,0.1);
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s;
+        }
+        
+        .contact-method:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateY(-5px);
+        }
+        
+        .contact-method-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .contact-method h4 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .contact-method p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+        
+        .contact-method a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+        
+        .contact-method a:hover {
             opacity: 0.7;
         }
         
         .contact-form {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            background: rgba(255,255,255,0.1);
+            padding: 3rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
         }
         
         .form-group {
@@ -534,471 +611,481 @@
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
-            color: var(--primary);
-            font-weight: 600;
+            font-weight: 500;
         }
         
         .form-group input,
         .form-group textarea {
             width: 100%;
-            padding: 0.8rem;
-            border: 2px solid var(--border);
+            padding: 1rem;
+            border: 1px solid rgba(255,255,255,0.3);
             border-radius: 8px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.95rem;
-            transition: border-color 0.3s;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255,255,255,0.6);
         }
         
         .form-group input:focus,
         .form-group textarea:focus {
             outline: none;
             border-color: var(--accent);
+            background: rgba(255,255,255,0.15);
         }
         
         .form-group textarea {
             resize: vertical;
-            min-height: 120px;
+            min-height: 150px;
         }
         
         .btn-submit {
             width: 100%;
+            padding: 1.2rem;
             background: var(--accent);
             color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
         }
         
         .btn-submit:hover {
-            background: var(--accent-bright);
+            background: #e67e22;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.4);
         }
         
         /* Footer */
         footer {
-            background: var(--text-dark);
+            background: var(--dark);
             color: white;
-            text-align: center;
             padding: 2rem;
+            text-align: center;
         }
         
         footer p {
             opacity: 0.8;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
         }
         
         /* Responsive */
+        @media (max-width: 968px) {
+            h1 { font-size: 3rem; }
+            .nav-links { gap: 1.5rem; }
+            .services-grid { grid-template-columns: 1fr; }
+            .skills-container { grid-template-columns: 1fr; }
+            .about-content { grid-template-columns: 1fr; }
+            .contact-methods { grid-template-columns: 1fr; }
+            .about-stats { grid-template-columns: 1fr; }
+        }
+        
         @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .hero .subtitle {
-                font-size: 1.2rem;
-            }
-            
-            .services-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .skills-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .about-content {
-                grid-template-columns: 1fr;
-                text-align: center;
-            }
-            
-            .about-image {
-                margin: 0 auto;
-            }
-            
-            .process-steps {
-                grid-template-columns: 1fr;
-            }
-            
-            .process-step::after {
-                display: none;
-            }
-            
-            .contact-content {
-                grid-template-columns: 1fr;
-            }
-            
-            .cta-buttons {
-                flex-direction: column;
-            }
+            h1 { font-size: 2.5rem; }
+            .hero-subtitle { font-size: 1.1rem; }
+            .cta-buttons { flex-direction: column; }
+            .nav-links { display: none; }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
+    
     <nav>
         <div class="nav-container">
-            <div class="logo">Manuel<span>.</span>dev</div>
+            <div class="logo">M<span>G</span></div>
             <ul class="nav-links">
                 <li><a href="#inicio">Inicio</a></li>
                 <li><a href="#servicios">Servicios</a></li>
                 <li><a href="#habilidades">Habilidades</a></li>
-                <li><a href="#sobre-mi">Sobre Mí</a></li>
+                <li><a href="#quien-soy">Quién Soy</a></li>
                 <li><a href="#contacto">Contacto</a></li>
             </ul>
         </div>
     </nav>
-
-    <!-- Hero Section -->
+    
     <section id="inicio" class="hero">
         <div class="hero-content">
-            <h1>Manuel Gutiérrez</h1>
-            <p class="subtitle">Desarrollador Web Full Stack & Especialista en Ciberseguridad</p>
-            <p class="tagline">Creando soluciones digitales seguras, escalables y de alto rendimiento</p>
-            <div class="cta-buttons">
-                <a href="#contacto" class="btn btn-primary">Solicitar Presupuesto</a>
-                <a href="#servicios" class="btn btn-secondary">Ver Servicios</a>
+            <div class="hero-text">
+                <div class="hero-tag">💻 Desarrollo Web & Ciberseguridad</div>
+                <h1>Manuel Gutiérrez</h1>
+                <p class="hero-subtitle">
+                    Especialista en desarrollo web full-stack y consultoría de ciberseguridad. 
+                    Transformo ideas en soluciones digitales seguras y escalables.
+                </p>
+                <div class="cta-buttons">
+                    <a href="#servicios" class="btn btn-primary">Ver Servicios</a>
+                    <a href="#contacto" class="btn btn-secondary">Contactar</a>
+                </div>
             </div>
         </div>
     </section>
-
-    <!-- Services Section -->
+    
     <section id="servicios">
         <div class="container">
-            <h2 class="section-title">Servicios Profesionales</h2>
-            <p class="section-subtitle">Soluciones integrales de desarrollo web y ciberseguridad adaptadas a tus necesidades</p>
+            <div class="section-title">
+                <h2>Servicios Profesionales</h2>
+                <p>Soluciones integrales para tu proyecto digital con los más altos estándares de calidad y seguridad</p>
+            </div>
             
             <div class="services-grid">
                 <div class="service-card">
-                    <div class="service-icon">💻</div>
-                    <h3>Desarrollo Web Full Stack</h3>
-                    <p>Aplicaciones web modernas, responsivas y escalables utilizando las últimas tecnologías del mercado.</p>
+                    <div class="service-icon">🌐</div>
+                    <h3>Desarrollo Web Full-Stack</h3>
+                    <p>Creación de aplicaciones web completas, desde el frontend hasta el backend, con tecnologías modernas y escalables.</p>
                     <ul class="service-features">
-                        <li>Frontend con React, Vue.js y Angular</li>
-                        <li>Backend con Node.js, Python y PHP</li>
-                        <li>APIs RESTful y GraphQL</li>
+                        <li>React, Vue.js, Angular</li>
+                        <li>Node.js, Python, PHP</li>
                         <li>Bases de datos SQL y NoSQL</li>
-                        <li>Arquitectura de microservicios</li>
+                        <li>APIs RESTful y GraphQL</li>
+                        <li>Responsive design</li>
                     </ul>
                 </div>
-
+                
                 <div class="service-card">
                     <div class="service-icon">🔒</div>
                     <h3>Auditorías de Seguridad</h3>
-                    <p>Análisis exhaustivos de vulnerabilidades y pruebas de penetración para proteger tus activos digitales.</p>
+                    <p>Análisis exhaustivo de vulnerabilidades en aplicaciones web y sistemas para identificar y mitigar riesgos de seguridad.</p>
                     <ul class="service-features">
                         <li>Pentesting de aplicaciones web</li>
-                        <li>Análisis de código fuente (SAST)</li>
-                        <li>Escaneo de vulnerabilidades</li>
-                        <li>Informes detallados y recomendaciones</li>
-                        <li>Compliance y normativas (GDPR, PCI-DSS)</li>
+                        <li>Análisis de código fuente</li>
+                        <li>Evaluación de infraestructura</li>
+                        <li>Informes detallados y remediación</li>
+                        <li>Cumplimiento normativo</li>
                     </ul>
                 </div>
-
+                
                 <div class="service-card">
                     <div class="service-icon">🛡️</div>
-                    <h3>Consultoría en Ciberseguridad</h3>
-                    <p>Asesoramiento estratégico para implementar políticas de seguridad robustas en tu organización.</p>
+                    <h3>Consultoría de Ciberseguridad</h3>
+                    <p>Asesoramiento estratégico para fortalecer la postura de seguridad de tu organización y proteger tus activos digitales.</p>
                     <ul class="service-features">
                         <li>Diseño de arquitecturas seguras</li>
-                        <li>Implementación de Zero Trust</li>
-                        <li>Security awareness training</li>
-                        <li>Plan de respuesta a incidentes</li>
-                        <li>Gestión de riesgos</li>
+                        <li>Políticas y procedimientos</li>
+                        <li>Formación en concienciación</li>
+                        <li>Gestión de incidentes</li>
+                        <li>Planes de continuidad</li>
                     </ul>
                 </div>
-
+                
                 <div class="service-card">
                     <div class="service-icon">⚡</div>
-                    <h3>Optimización y Performance</h3>
-                    <p>Mejora del rendimiento de aplicaciones web para ofrecer la mejor experiencia de usuario.</p>
+                    <h3>Optimización de Rendimiento</h3>
+                    <p>Mejora del performance y velocidad de tus aplicaciones web para una mejor experiencia de usuario.</p>
                     <ul class="service-features">
-                        <li>Análisis de rendimiento</li>
-                        <li>Optimización de código</li>
-                        <li>CDN y caching strategies</li>
-                        <li>SEO técnico</li>
+                        <li>Análisis de carga y rendimiento</li>
+                        <li>Optimización de bases de datos</li>
+                        <li>CDN y caching</li>
+                        <li>Lazy loading y code splitting</li>
                         <li>Core Web Vitals</li>
                     </ul>
                 </div>
-
+                
                 <div class="service-card">
-                    <div class="service-icon">🔐</div>
-                    <h3>Implementación de DevSecOps</h3>
-                    <p>Integración de seguridad en el ciclo de desarrollo para detectar vulnerabilidades tempranamente.</p>
+                    <div class="service-icon">☁️</div>
+                    <h3>DevOps & Cloud</h3>
+                    <p>Implementación de soluciones en la nube y automatización de procesos de desarrollo y despliegue.</p>
                     <ul class="service-features">
-                        <li>CI/CD con seguridad integrada</li>
-                        <li>Análisis de dependencias</li>
-                        <li>Container security</li>
-                        <li>IaC security scanning</li>
-                        <li>Automatización de testing</li>
-                    </ul>
-                </div>
-
-                <div class="service-card">
-                    <div class="service-icon">📱</div>
-                    <h3>Desarrollo de APIs Seguras</h3>
-                    <p>Diseño e implementación de APIs robustas con autenticación y autorización avanzada.</p>
-                    <ul class="service-features">
-                        <li>OAuth 2.0 y JWT</li>
-                        <li>Rate limiting y throttling</li>
-                        <li>Documentación con OpenAPI</li>
-                        <li>API Gateway</li>
+                        <li>AWS, Azure, Google Cloud</li>
+                        <li>Docker y Kubernetes</li>
+                        <li>CI/CD pipelines</li>
+                        <li>Infraestructura como código</li>
                         <li>Monitoreo y logging</li>
                     </ul>
                 </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">🔐</div>
+                    <h3>Implementación de Medidas de Seguridad</h3>
+                    <p>Despliegue de soluciones de seguridad específicas para proteger tus aplicaciones y datos.</p>
+                    <ul class="service-features">
+                        <li>WAF y firewalls</li>
+                        <li>Autenticación multifactor</li>
+                        <li>Cifrado de datos</li>
+                        <li>SIEM y detección de amenazas</li>
+                        <li>Gestión de accesos (IAM)</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </section>
-
-    <!-- Skills Section -->
-    <section id="habilidades" style="background: var(--bg-white);">
+    
+    <section id="habilidades">
         <div class="container">
-            <h2 class="section-title">Tecnologías y Habilidades</h2>
-            <p class="section-subtitle">Stack tecnológico diverso con enfoque en seguridad y mejores prácticas</p>
+            <div class="section-title">
+                <h2>Habilidades Técnicas</h2>
+                <p>Experiencia en múltiples tecnologías y frameworks para ofrecer las mejores soluciones</p>
+            </div>
             
             <div class="skills-container">
                 <div class="skills-category">
-                    <h3>🌐 Frontend Development</h3>
-                    <div class="skills-list">
-                        <span class="skill-tag">HTML5</span>
-                        <span class="skill-tag">CSS3</span>
-                        <span class="skill-tag">JavaScript ES6+</span>
-                        <span class="skill-tag">TypeScript</span>
-                        <span class="skill-tag">React.js</span>
-                        <span class="skill-tag">Vue.js</span>
-                        <span class="skill-tag">Angular</span>
-                        <span class="skill-tag">Next.js</span>
-                        <span class="skill-tag">Tailwind CSS</span>
-                        <span class="skill-tag">Bootstrap</span>
-                        <span class="skill-tag">Webpack</span>
-                        <span class="skill-tag">Vite</span>
+                    <h3>💻 Desarrollo Web</h3>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">JavaScript / TypeScript</span>
+                            <span class="skill-level">95%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 95%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">React & Vue.js</span>
+                            <span class="skill-level">90%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 90%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">Node.js & Express</span>
+                            <span class="skill-level">92%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 92%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">Python & Django</span>
+                            <span class="skill-level">88%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 88%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">SQL & MongoDB</span>
+                            <span class="skill-level">85%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 85%;"></div>
+                        </div>
                     </div>
                 </div>
-
+                
                 <div class="skills-category">
-                    <h3>⚙️ Backend Development</h3>
-                    <div class="skills-list">
-                        <span class="skill-tag">Node.js</span>
-                        <span class="skill-tag">Express.js</span>
-                        <span class="skill-tag">Python</span>
-                        <span class="skill-tag">Django</span>
-                        <span class="skill-tag">Flask</span>
-                        <span class="skill-tag">PHP</span>
-                        <span class="skill-tag">Laravel</span>
-                        <span class="skill-tag">RESTful APIs</span>
-                        <span class="skill-tag">GraphQL</span>
-                        <span class="skill-tag">WebSockets</span>
+                    <h3>🔒 Ciberseguridad</h3>
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">Pentesting Web</span>
+                            <span class="skill-level">93%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 93%;"></div>
+                        </div>
                     </div>
-                </div>
-
-                <div class="skills-category">
-                    <h3>🗄️ Bases de Datos</h3>
-                    <div class="skills-list">
-                        <span class="skill-tag">MySQL</span>
-                        <span class="skill-tag">PostgreSQL</span>
-                        <span class="skill-tag">MongoDB</span>
-                        <span class="skill-tag">Redis</span>
-                        <span class="skill-tag">Firebase</span>
-                        <span class="skill-tag">Elasticsearch</span>
-                        <span class="skill-tag">SQL Optimization</span>
+                    
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">OWASP Top 10</span>
+                            <span class="skill-level">95%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 95%;"></div>
+                        </div>
                     </div>
-                </div>
-
-                <div class="skills-category">
-                    <h3>🔐 Ciberseguridad</h3>
-                    <div class="skills-list">
-                        <span class="skill-tag">OWASP Top 10</span>
-                        <span class="skill-tag">Penetration Testing</span>
-                        <span class="skill-tag">Burp Suite</span>
-                        <span class="skill-tag">OWASP ZAP</span>
-                        <span class="skill-tag">Metasploit</span>
-                        <span class="skill-tag">Nmap</span>
-                        <span class="skill-tag">Wireshark</span>
-                        <span class="skill-tag">SQL Injection</span>
-                        <span class="skill-tag">XSS Prevention</span>
-                        <span class="skill-tag">CSRF Protection</span>
-                        <span class="skill-tag">Security Headers</span>
-                        <span class="skill-tag">Encryption</span>
+                    
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">Análisis de Vulnerabilidades</span>
+                            <span class="skill-level">90%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 90%;"></div>
+                        </div>
                     </div>
-                </div>
-
-                <div class="skills-category">
-                    <h3>☁️ DevOps & Cloud</h3>
-                    <div class="skills-list">
-                        <span class="skill-tag">Docker</span>
-                        <span class="skill-tag">Kubernetes</span>
-                        <span class="skill-tag">AWS</span>
-                        <span class="skill-tag">Google Cloud</span>
-                        <span class="skill-tag">Azure</span>
-                        <span class="skill-tag">CI/CD</span>
-                        <span class="skill-tag">GitHub Actions</span>
-                        <span class="skill-tag">Jenkins</span>
-                        <span class="skill-tag">Terraform</span>
-                        <span class="skill-tag">Nginx</span>
+                    
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">Seguridad en Cloud</span>
+                            <span class="skill-level">87%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 87%;"></div>
+                        </div>
                     </div>
-                </div>
-
-                <div class="skills-category">
-                    <h3>🛠️ Herramientas & Otros</h3>
-                    <div class="skills-list">
-                        <span class="skill-tag">Git</span>
-                        <span class="skill-tag">Linux</span>
-                        <span class="skill-tag">Bash Scripting</span>
-                        <span class="skill-tag">VS Code</span>
-                        <span class="skill-tag">Postman</span>
-                        <span class="skill-tag">Jira</span>
-                        <span class="skill-tag">Agile/Scrum</span>
-                        <span class="skill-tag">UX/UI Design</span>
-                        <span class="skill-tag">Figma</span>
+                    
+                    <div class="skill-item">
+                        <div class="skill-header">
+                            <span class="skill-name">Forensics & Incident Response</span>
+                            <span class="skill-level">82%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" style="width: 82%;"></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- About Section -->
-    <section id="sobre-mi">
+    
+    <section id="quien-soy">
         <div class="container">
-            <h2 class="section-title">Sobre Mí</h2>
-            <p class="section-subtitle">Profesional dedicado al desarrollo de soluciones digitales seguras y eficientes</p>
+            <div class="section-title">
+                <h2>Quién Soy</h2>
+                <p>Conoce más sobre mi trayectoria profesional y experiencia</p>
+            </div>
             
             <div class="about-content">
-                <div class="about-image">👨‍💻</div>
                 <div class="about-text">
-                    <h3>¿Quién soy?</h3>
+                    <h3>Desarrollador Full-Stack & Especialista en Ciberseguridad</h3>
                     <p>
-                        Soy Manuel Gutiérrez, desarrollador web full stack y especialista en ciberseguridad con más de 8 años de experiencia 
-                        en el sector tecnológico. Mi pasión es crear aplicaciones web robustas, escalables y, sobre todo, seguras.
+                        Con más de 8 años de experiencia en el sector tecnológico, me especializo en crear 
+                        soluciones web robustas y seguras que impulsan el crecimiento de negocios digitales.
                     </p>
                     <p>
-                        A lo largo de mi carrera profesional, he trabajado con empresas de diversos sectores, desde startups hasta 
-                        corporaciones multinacionales, ayudándoles a digitalizar sus procesos y proteger sus activos digitales frente 
-                        a las amenazas cibernéticas actuales.
+                        Mi enfoque combina las mejores prácticas de desarrollo con un profundo conocimiento 
+                        en ciberseguridad, asegurando que cada proyecto no solo funcione perfectamente, sino 
+                        que también esté protegido contra las amenazas más recientes.
                     </p>
                     <p>
-                        Mi enfoque combina las mejores prácticas de desarrollo con un profundo conocimiento de seguridad informática, 
-                        garantizando que cada proyecto cumpla con los más altos estándares de calidad y protección.
+                        He trabajado con empresas de diversos sectores, desde startups hasta corporaciones 
+                        multinacionales, ayudándolas a digitalizar sus procesos y fortalecer su postura de seguridad.
                     </p>
                     
-                    <ul class="info-list">
-                        <li><strong>Nombre:</strong> Manuel Gutiérrez</li>
-                        <li><strong>Ubicación:</strong> España</li>
-                        <li><strong>Email:</strong> <a href="mailto:phishbroker@proton.me">phishbroker@proton.me</a></li>
-                        <li><strong>Experiencia:</strong> +8 años</li>
-                        <li><strong>Especialización:</strong> Full Stack & Cybersecurity</li>
-                    </ul>
+                    <div class="about-stats">
+                        <div class="stat-box">
+                            <span class="stat-number">8+</span>
+                            <span class="stat-label">Años de Experiencia</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-number">150+</span>
+                            <span class="stat-label">Proyectos Completados</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-number">50+</span>
+                            <span class="stat-label">Auditorías Realizadas</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-number">98%</span>
+                            <span class="stat-label">Satisfacción Cliente</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="about-info">
+                    <div class="info-item">
+                        <div class="info-icon">👤</div>
+                        <div class="info-content">
+                            <div class="info-label">Nombre Completo</div>
+                            <div class="info-value">Manuel Gutiérrez</div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">📧</div>
+                        <div class="info-content">
+                            <div class="info-label">Email</div>
+                            <div class="info-value">
+                                <a href="mailto:phishbroker@proton.me">phishbroker@proton.me</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">📍</div>
+                        <div class="info-content">
+                            <div class="info-label">Ubicación</div>
+                            <div class="info-value">Madrid, España</div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">💼</div>
+                        <div class="info-content">
+                            <div class="info-label">Disponibilidad</div>
+                            <div class="info-value">Proyectos Freelance</div>
+                        </div>
+                    </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">🎓</div>
+                        <div class="info-content">
+                            <div class="info-label">Certificaciones</div>
+                            <div class="info-value">CEH, OSCP, AWS Certified</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- Process Section -->
-    <section style="background: var(--bg-white);">
+    
+    <section id="contacto">
         <div class="container">
-            <h2 class="section-title">Proceso de Trabajo</h2>
-            <p class="section-subtitle">Metodología estructurada para garantizar el éxito de cada proyecto</p>
+            <div class="section-title">
+                <h2>Contacto</h2>
+                <p>¿Tienes un proyecto en mente? Hablemos sobre cómo puedo ayudarte</p>
+            </div>
             
-            <div class="process-steps">
-                <div class="process-step">
-                    <div class="step-number">1</div>
-                    <h4>Análisis</h4>
-                    <p>Comprensión profunda de tus necesidades y objetivos</p>
+            <div class="contact-container">
+                <div class="contact-methods">
+                    <div class="contact-method">
+                        <div class="contact-method-icon">📧</div>
+                        <h4>Email</h4>
+                        <p><a href="mailto:phishbroker@proton.me">phishbroker@proton.me</a></p>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <div class="contact-method-icon">💬</div>
+                        <h4>LinkedIn</h4>
+                        <p><a href="#">/in/manuelgutierrez</a></p>
+                    </div>
+                    
+                    <div class="contact-method">
+                        <div class="contact-method-icon">🐙</div>
+                        <h4>GitHub</h4>
+                        <p><a href="#">@manuelgutierrez</a></p>
+                    </div>
                 </div>
-                <div class="process-step">
-                    <div class="step-number">2</div>
-                    <h4>Planificación</h4>
-                    <p>Diseño de arquitectura y estrategia de desarrollo</p>
-                </div>
-                <div class="process-step">
-                    <div class="step-number">3</div>
-                    <h4>Desarrollo</h4>
-                    <p>Implementación con código limpio y seguro</p>
-                </div>
-                <div class="process-step">
-                    <div class="step-number">4</div>
-                    <h4>Entrega</h4>
-                    <p>Testing, deploy y soporte continuo</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contacto" class="contact-section">
-        <div class="container">
-            <div class="contact-content">
-                <div class="contact-info">
-                    <h3>¿Listo para empezar tu proyecto?</h3>
-                    <p>
-                        Estoy disponible para nuevos proyectos y colaboraciones. Ya sea que necesites desarrollar una aplicación 
-                        desde cero, mejorar la seguridad de tu infraestructura o simplemente asesoramiento técnico, 
-                        estaré encantado de ayudarte.
-                    </p>
-                    <ul class="contact-methods">
-                        <li>
-                            <span>📧</span>
-                            <a href="mailto:phishbroker@proton.me">phishbroker@proton.me</a>
-                        </li>
-                        <li>
-                            <span>📱</span>
-                            <span>Disponible vía email</span>
-                        </li>
-                        <li>
-                            <span>⏰</span>
-                            <span>Respuesta en 24-48h</span>
-                        </li>
-                    </ul>
-                </div>
+                
                 <div class="contact-form">
-                    <h3 style="color: var(--primary); margin-bottom: 1.5rem;">Envíame un mensaje</h3>
                     <form action="#" method="POST">
                         <div class="form-group">
-                            <label for="name">Nombre</label>
-                            <input type="text" id="name" name="name" required>
+                            <label for="nombre">Nombre</label>
+                            <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
                         </div>
+                        
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input type="email" id="email" name="email" required>
+                            <input type="email" id="email" name="email" placeholder="tu@email.com" required>
                         </div>
+                        
                         <div class="form-group">
-                            <label for="subject">Asunto</label>
-                            <input type="text" id="subject" name="subject" required>
+                            <label for="asunto">Asunto</label>
+                            <input type="text" id="asunto" name="asunto" placeholder="¿En qué puedo ayudarte?" required>
                         </div>
+                        
                         <div class="form-group">
-                            <label for="message">Mensaje</label>
-                            <textarea id="message" name="message" required></textarea>
+                            <label for="mensaje">Mensaje</label>
+                            <textarea id="mensaje" name="mensaje" placeholder="Cuéntame sobre tu proyecto..." required></textarea>
                         </div>
-                        <button type="submit" class="btn btn-submit">Enviar Mensaje</button>
+                        
+                        <button type="submit" class="btn-submit">Enviar Mensaje</button>
                     </form>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- Footer -->
+    
     <footer>
         <div class="container">
             <p>&copy; 2024 Manuel Gutiérrez. Todos los derechos reservados.</p>
-            <p style="margin-top: 0.5rem;">Desarrollo Web & Ciberseguridad Profesional</p>
+            <p style="margin-top: 1rem; color: var(--accent); font-family: 'Fira Code', monospace; font-size: 1.1rem; font-weight: 600;">flag{soy_manuel_gutierrez}</p>
         </div>
     </footer>
-
-    <script>
-        // Smooth scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
-        
-        // Form submission handler
-        document.querySelector('.contact-form form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Gracias por tu mensaje. Te responderé lo antes posible.');
-            this.reset();
-        });
-    </script>
 </body>
 </html>
