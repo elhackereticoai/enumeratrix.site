@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Información | Panel Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2d3561;
+            --secondary: #5b6cad;
+            --accent: #f39c12;
+            --dark: #1a1d2e;
+            --light: #f4f6f9;
+            --text: #2c3e50;
+            --text-light: #7f8c8d;
+            --success: #27ae60;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Background Animation Elements */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+            top: -200px;
+            right: -200px;
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        body::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 50%;
+            bottom: -100px;
+            left: -100px;
+            animation: float 15s infinite ease-in-out reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(30px, 30px) rotate(5deg); }
+        }
+
+        /* Info Container */
+        .info-container {
+            max-width: 800px;
+            text-align: center;
+            color: white;
+            z-index: 10;
+            padding: 2rem;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            padding: 4rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            display: block;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .info-card h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 900;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .info-card p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .code-block {
+            background: var(--dark);
+            padding: 1.5rem;
+            border-radius: 10px;
+            font-family: 'Fira Code', monospace;
+            color: var(--accent);
+            word-break: break-all;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .code-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent);
+        }
+
+        .code-block a {
+            color: #2ecc71;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .code-block a:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+
+        .flag-hint {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(243, 156, 18, 0.2);
+            border-radius: 10px;
+            border: 1px solid rgba(243, 156, 18, 0.3);
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            color: var(--accent);
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 1rem 2rem;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .info-card { padding: 2rem; }
+            .info-card h1 { font-size: 1.8rem; }
+            .success-icon { font-size: 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="info-container">
+        <div class="info-card">
+            <span class="success-icon">🔓</span>
+            <h1>Bienvenido, admin.</h1>
+            <p>Aquí tienes la clave para el siguiente nivel:</p>
+            
+            <div class="code-block">
+                <a href="https://pastebin.com/raw/AbCdEfG" target="_blank">https://pastebin.com/6xvvQ5NF</a>
+            </div>
+            
+            <a href="admin.html" class="back-btn">← Volver al Login</a>
+        </div>
+    </div>
+
+    <script>
+        // Simple security check - redirect if not authenticated
+        // In a real scenario, this would check a session token
+        const authenticated = sessionStorage.getItem('admin_authenticated');
+        
+        // For demo purposes, we allow direct access
+        // In production, you would validate a proper session
+        
+        console.log('%c⚠️ Área Administrativa', 'color: #f39c12; font-size: 20px; font-weight: bold;');
+        console.log('%cAcceso concedido. Nivel completado.', 'color: #27ae60; font-size: 14px;');
+    </script>
+
+</body>
+</html>
+
