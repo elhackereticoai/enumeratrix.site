@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | Panel de Acceso</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2d3561;
+            --secondary: #5b6cad;
+            --accent: #f39c12;
+            --dark: #1a1d2e;
+            --light: #f4f6f9;
+            --text: #2c3e50;
+            --text-light: #7f8c8d;
+            --success: #27ae60;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Background Animation Elements */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 50%;
+            top: -200px;
+            right: -200px;
+            animation: float 20s infinite ease-in-out;
+        }
+        
+        body::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 50%;
+            bottom: -100px;
+            left: -100px;
+            animation: float 15s infinite ease-in-out reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(30px, 30px) rotate(5deg); }
+        }
+        
+        /* Login Container */
+        .login-wrapper {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 450px;
+            padding: 2rem;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 3rem 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.5);
+            text-align: center;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo-area {
+            margin-bottom: 2rem;
+        }
+
+        .logo-text {
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--primary);
+            letter-spacing: -1px;
+        }
+
+        .logo-text span {
+            color: var(--accent);
+        }
+
+        .login-title {
+            font-size: 1.5rem;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .login-subtitle {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(243, 156, 18, 0.1);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--accent), #e67e22);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.3);
+            margin-top: 1rem;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(243, 156, 18, 0.4);
+        }
+
+        .error-msg {
+            color: #e74c3c;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            display: none;
+            background: rgba(231, 76, 60, 0.1);
+            padding: 0.8rem;
+            border-radius: 8px;
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 1.5rem;
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: var(--primary);
+        }
+
+        /* Info Page Styles */
+        .info-container {
+            max-width: 800px;
+            text-align: center;
+            color: white;
+            z-index: 10;
+            padding: 2rem;
+        }
+
+        .info-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            padding: 4rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .info-card h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 900;
+        }
+
+        .info-card p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .code-block {
+            background: var(--dark);
+            padding: 1.5rem;
+            border-radius: 10px;
+            font-family: 'Fira Code', monospace;
+            color: var(--accent);
+            word-break: break-all;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .code-block a {
+            color: #2ecc71;
+            text-decoration: none;
+        }
+
+        .code-block a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .login-card { padding: 2rem 1.5rem; }
+            .info-card { padding: 2rem; }
+            .info-card h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOGIN PAGE CONTENT -->
+    <div id="login-page" class="login-wrapper">
+        <div class="login-card">
+            <div class="logo-area">
+                <div class="logo-text">M<span>G</span> Admin</div>
+            </div>
+            <h2 class="login-title">Acceso Restringido</h2>
+            <p class="login-subtitle">Ingresa tus credenciales para continuar</p>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Usuario</label>
+                    <input type="text" id="username" class="form-control" placeholder="Ingresa tu usuario" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+                </div>
+                
+                <button type="submit" class="btn-login">Iniciar Sesión</button>
+                
+                <div id="errorMsg" class="error-msg">
+                    Credenciales incorrectas. Acceso denegado.
+                </div>
+            </form>
+            
+            <a href="index.html" class="back-link">← Volver al sitio principal</a>
+        </div>
+    </div>
+
+    <!-- INFO PAGE CONTENT (Hidden by default) -->
+    <div id="info-page" class="info-container" style="display: none;">
+        <div class="info-card">
+            <span class="success-icon">🔓</span>
+            <h1>Bienvenido, admin.</h1>
+            <p>Aquí tienes la clave para el siguiente nivel:</p>
+            <div class="code-block">
+                <a href="https://pastebin.com/raw/AbCdEfG" target="_blank">https://pastebin.com/raw/AbCdEfG</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIGURATION ---
+        // CREDENTIALS ARE ENCRYPTED USING A SIMPLE ROT13 + REVERSE ALGORITHM
+        // Original: phishbroker -> Encrypted: rekbfsiph
+        // Original: phishbroker123 -> Encrypted: 321rekbfsiph
+        
+        const ENCRYPTED_USER = "rekbfsiph";
+        const ENCRYPTED_PASS = "321rekbfsiph";
+
+        // --- DECRYPTION LOGIC ---
+        function decrypt(str) {
+            // 1. Reverse the string
+            let reversed = str.split('').reverse().join('');
+            
+            // 2. Apply ROT13 (Caesar Cipher with shift 13)
+            return reversed.replace(/[a-zA-Z]/g, function(c) {
+                return String.fromCharCode((c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
+            });
+        }
+
+        // --- LOGIN LOGIC ---
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const userIn = document.getElementById('username').value;
+            const passIn = document.getElementById('password').value;
+            const errorDiv = document.getElementById('errorMsg');
+            
+            // Encrypt user input to compare with stored hash
+            // We encrypt the input using the same logic used to create the stored hash
+            // Logic: Reverse -> ROT13
+            const encryptInput = (str) => {
+                // ROT13 first
+                let rot13 = str.replace(/[a-zA-Z]/g, function(c) {
+                    return String.fromCharCode((c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
+                });
+                // Then Reverse
+                return rot13.split('').reverse().join('');
+            };
+
+            const hashedUser = encryptInput(userIn);
+            const hashedPass = encryptInput(passIn);
+
+            if (hashedUser === ENCRYPTED_USER && hashedPass === ENCRYPTED_PASS) {
+                // Success Animation
+                errorDiv.style.display = 'none';
+                document.getElementById('login-page').style.opacity = '0';
+                document.getElementById('login-page').style.transform = 'translateY(-20px)';
+                
+                setTimeout(() => {
+                    document.getElementById('login-page').style.display = 'none';
+                    document.getElementById('info-page').style.display = 'block';
+                    // Simple fade in for info page
+                    document.getElementById('info-page').style.opacity = '0';
+                    setTimeout(() => {
+                        document.getElementById('info-page').style.transition = 'opacity 0.5s';
+                        document.getElementById('info-page').style.opacity = '1';
+                    }, 50);
+                }, 500);
+            } else {
+                // Error Shake Animation
+                errorDiv.style.display = 'block';
+                const card = document.querySelector('.login-card');
+                card.style.animation = 'none';
+                card.offsetHeight; /* trigger reflow */
+                card.style.animation = 'shake 0.5s';
+            }
+        });
+
+        // Add shake animation dynamically
+        const styleSheet = document.createElement("style");
+        styleSheet.innerText = `
+            @keyframes shake {
+                0% { transform: translateX(0); }
+                25% { transform: translateX(-10px); }
+                50% { transform: translateX(10px); }
+                75% { transform: translateX(-10px); }
+                100% { transform: translateX(0); }
+            }
+        `;
+        document.head.appendChild(styleSheet);
+    </script>
+</body>
+</html>
+
