@@ -99,6 +99,7 @@
             text-align: center;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 0 40px rgba(0, 255, 136, 0.2);
         }
 
         .token-box::before {
@@ -120,12 +121,13 @@
         .token-icon {
             font-size: 4rem;
             margin-bottom: 1rem;
+            filter: drop-shadow(0 0 20px var(--primary));
             animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
-            0%, 100% { text-shadow: 0 0 20px var(--primary); }
-            50% { text-shadow: 0 0 40px var(--primary), 0 0 60px var(--primary); }
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         .token-title {
@@ -152,7 +154,7 @@
             font-family: 'Fira Code', monospace;
             font-size: 1.1rem;
             text-align: center;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             margin-bottom: 1.5rem;
             transition: all 0.3s;
         }
@@ -160,7 +162,7 @@
         .token-input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.4);
         }
 
         .token-input::placeholder {
@@ -179,14 +181,14 @@
             font-size: 1.1rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
             cursor: pointer;
             transition: all 0.3s;
         }
 
         .btn-validate:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.4);
+            box-shadow: 0 10px 40px rgba(0, 255, 136, 0.5);
         }
 
         .error-msg {
@@ -244,7 +246,7 @@
         .logo {
             font-size: 4rem;
             margin-bottom: 1rem;
-            animation: pulse 2s infinite;
+            filter: drop-shadow(0 0 30px var(--primary));
         }
 
         .title {
@@ -560,6 +562,18 @@
         .shake {
             animation: shake 0.5s ease-in-out;
         }
+
+        /* Success animation */
+        @keyframes successGlow {
+            0% { box-shadow: 0 0 20px rgba(0, 255, 136, 0.5); }
+            50% { box-shadow: 0 0 60px rgba(0, 255, 136, 1); }
+            100% { box-shadow: 0 0 20px rgba(0, 255, 136, 0.5); }
+        }
+
+        .success {
+            animation: successGlow 1s ease-in-out;
+            border-color: var(--primary) !important;
+        }
     </style>
 </head>
 <body>
@@ -575,7 +589,7 @@
             <p class="token-subtitle">Introduce el token para validar tu identidad</p>
             
             <form id="tokenForm">
-                <input type="text" id="tokenInput" class="token-input" placeholder="X-X-X-X-X-X-X-X-X" maxlength="12" autocomplete="off">
+                <input type="text" id="tokenInput" class="token-input" placeholder="x-x-x-x-x-x-x-x-x" maxlength="12" autocomplete="off" spellcheck="false">
                 <button type="submit" class="btn-validate">Validar Token</button>
             </form>
             
@@ -704,47 +718,30 @@
 
     <script>
         // ============================================
-        // TOKEN ENCRYPTION (XOR + REVERSE)
+        // TOKEN ENCRYPTION USING ROT47 CIPHER
+        // ROT47 is a printable ASCII substitution cipher
+        // Not base64, not MD5 - harder to identify
+        // ============================================
+        // 
         // Original token: a1b2c3d4e5f6
-        // Encrypted: 6f5e4d3c2b1a (reversed)
-        // Then XOR with key 0x42
+        // ROT47 Encrypted: o?p@qArBsCtD
         // ============================================
         
-        const ENCRYPTED_TOKEN = "252726242523272226212320";
-        const XOR_KEY = 0x42;
+        const ENCRYPTED_TOKEN = "o?p@qArBsCtD";
         
-        // Decrypt function
-        function decryptToken(encrypted) {
-            // Step 1: Convert hex pairs to bytes and XOR
-            let bytes = [];
-            for (let i = 0; i < encrypted.length; i += 2) {
-                let hex = encrypted.substr(i, 2);
-                let byte = parseInt(hex, 16) ^ XOR_KEY;
-                bytes.push(byte);
+        // ROT47 encryption/decryption function (symmetric)
+        function rot47(str) {
+            let result = '';
+            for (let i = 0; i < str.length; i++) {
+                let charCode = str.charCodeAt(i);
+                // ROT47 works on printable ASCII (33-126)
+                if (charCode >= 33 && charCode <= 126) {
+                    charCode = ((charCode - 33 + 47) % 94) + 33;
+                }
+                result += String.fromCharCode(charCode);
             }
-            
-            // Step 2: Convert to string and reverse
-            let str = bytes.map(b => String.fromCharCode(b)).join('');
-            return str.split('').reverse().join('');
+            return result;
         }
-        
-        // Encrypt function (for validation)
-        function encryptToken(token) {
-            // Step 1: Reverse the token
-            let reversed = token.split('').reverse().join('');
-            
-            // Step 2: XOR each character and convert to hex
-            let hex = '';
-            for (let i = 0; i < reversed.length; i++) {
-                let byte = reversed.charCodeAt(i) ^ XOR_KEY;
-                hex += byte.toString(16).padStart(2, '0');
-            }
-            
-            return hex;
-        }
-        
-        // Get the correct token (decrypted for comparison)
-        const CORRECT_TOKEN = decryptToken(ENCRYPTED_TOKEN);
         
         console.log('%c🔒 ACCESO RESTRINGIDO', 'color: #00ff88; font-size: 24px; font-weight: bold;');
         console.log('%cToken validation system active', 'color: #00d4ff; font-size: 14px;');
@@ -756,18 +753,26 @@
             const tokenInput = document.getElementById('tokenInput').value.trim();
             const errorMsg = document.getElementById('errorMsg');
             const tokenBox = document.getElementById('tokenBox');
+            const btnValidate = document.querySelector('.btn-validate');
             
-            // Encrypt user input and compare with stored encrypted token
-            const encryptedInput = encryptToken(tokenInput);
+            // Encrypt user input using ROT47 and compare with stored encrypted token
+            const encryptedInput = rot47(tokenInput);
             
             if (encryptedInput === ENCRYPTED_TOKEN) {
-                // Success - show main content
-                sessionStorage.setItem('tokenValidated', 'true');
-                sessionStorage.setItem('validatedToken', tokenInput);
-                document.getElementById('tokenLogin').style.display = 'none';
-                document.getElementById('mainContent').style.display = 'block';
-                document.getElementById('validatedToken').textContent = tokenInput;
-                initMainContent();
+                // Success - show success animation then redirect
+                errorMsg.style.display = 'none';
+                tokenBox.classList.add('success');
+                btnValidate.textContent = '✓ TOKEN VALIDADO';
+                btnValidate.style.background = 'linear-gradient(135deg, #00ff88, #00d4ff)';
+                
+                setTimeout(() => {
+                    sessionStorage.setItem('tokenValidated', 'true');
+                    sessionStorage.setItem('validatedToken', tokenInput);
+                    document.getElementById('tokenLogin').style.display = 'none';
+                    document.getElementById('mainContent').style.display = 'block';
+                    document.getElementById('validatedToken').textContent = tokenInput;
+                    initMainContent();
+                }, 1500);
             } else {
                 // Error - shake animation
                 errorMsg.style.display = 'block';
@@ -785,6 +790,8 @@
                 document.getElementById('mainContent').style.display = 'block';
                 document.getElementById('validatedToken').textContent = sessionStorage.getItem('validatedToken');
                 initMainContent();
+            } else {
+                createParticles();
             }
         });
 
@@ -811,6 +818,7 @@
         // Create particles
         function createParticles() {
             const container = document.getElementById('particles');
+            if (!container) return;
             for (let i = 0; i < 50; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
