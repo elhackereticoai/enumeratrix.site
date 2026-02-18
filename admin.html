@@ -256,6 +256,7 @@
 </head>
 <body>
 
+    <!-- LOGIN PAGE -->
     <div id="login-page" class="login-wrapper">
         <div class="login-card">
             <div class="logo-area">
@@ -286,44 +287,30 @@
         </div>
     </div>
 
+    <!-- INFO PAGE (Success after login) -->
     <div id="info-page" class="info-container" style="display: none;">
         <div class="info-card">
             <span class="success-icon">🔓</span>
             <h1>Bienvenido, admin.</h1>
             <p>Aquí tienes la clave para el siguiente nivel:</p>
             <div class="code-block">
-                <a id="secretLink" href="#" target="_blank">Cargando enlace seguro...</a>
+                <a href="https://pastebin.com/6xvvQ5NF" target="_blank">https://pastebin.com/6xvvQ5NF</a>
             </div>
         </div>
     </div>
 
     <script>
         // ============================================
-        // SISTEMA DE CIFRADO ROT47 PARA CREDENCIALES
+        // CREDENTIALS ENCRYPTED WITH ROT47 CIPHER
         // ============================================
-        // Las credenciales se cifran con ROT47 (shift de 47 en ASCII 33-126)
-        // Usuario: phishbroker -> A9:D93C@<6C
-        // Password: phishbroker123 -> A9:D93C@<6C`ab
+        // phishbroker -> A9:D93C@<6C
+        // phishbroker123 -> A9:D93C@<6C`ab
         // ============================================
         
         const ENCRYPTED_USER = "A9:D93C@<6C";
         const ENCRYPTED_PASS = "A9:D93C@<6C`ab";
         
-        // ============================================
-        // URL DE PASTEBIN CIFRADA CON EL MISMO ALGORITMO
-        // ============================================
-        // URL Original: https://pastebin.com/6xvvQ5NF
-        // Cifrada con ROT47 para mantener consistencia
-        // El mismo algoritmo que las credenciales
-        // ============================================
-        const ENCRYPTED_URL = "https://pastebin.com/6xvvQ5NF";
-        
-        // ============================================
-        // FUNCIÓN DE CIFRADO/DESCIFRADO ROT47
-        // ============================================
-        // Es simétrica: aplicar ROT47 dos veces devuelve el original
-        // Rango: ASCII 33-126 (caracteres imprimibles)
-        // ============================================
+        // ROT47 encryption/decryption function (symmetric)
         function rot47(str) {
             let result = '';
             for (let i = 0; i < str.length; i++) {
@@ -336,19 +323,7 @@
             return result;
         }
 
-        // ============================================
-        // FUNCIÓN PARA DESCIFRAR LA URL
-        // ============================================
-        // Usa el mismo algoritmo que las credenciales
-        // Así todo el sistema de cifrado está vinculado
-        // ============================================
-        function decryptURL() {
-            return rot47(ENCRYPTED_URL);
-        }
-
-        // ============================================
-        // MANEJO DEL FORMULARIO DE LOGIN
-        // ============================================
+        // Login form handler
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -356,12 +331,12 @@
             const passIn = document.getElementById('password').value;
             const errorDiv = document.getElementById('errorMsg');
             
-            // Cifrar input del usuario con ROT47 y comparar
+            // Encrypt user input using ROT47 and compare
             const encryptedUser = rot47(userIn);
             const encryptedPass = rot47(passIn);
 
             if (encryptedUser === ENCRYPTED_USER && encryptedPass === ENCRYPTED_PASS) {
-                // Login exitoso
+                // Success Animation
                 errorDiv.style.display = 'none';
                 document.getElementById('login-page').style.opacity = '0';
                 document.getElementById('login-page').style.transform = 'translateY(-20px)';
@@ -370,13 +345,7 @@
                     document.getElementById('login-page').style.display = 'none';
                     document.getElementById('info-page').style.display = 'block';
                     
-                    // Descifrar y mostrar la URL de Pastebin
-                    // Usa el MISMO algoritmo que las credenciales
-                    const secretURL = decryptURL();
-                    document.getElementById('secretLink').href = secretURL;
-                    document.getElementById('secretLink').textContent = secretURL;
-                    
-                    // Animación de fade in
+                    // Fade in for info page
                     document.getElementById('info-page').style.opacity = '0';
                     setTimeout(() => {
                         document.getElementById('info-page').style.transition = 'opacity 0.5s';
@@ -384,7 +353,7 @@
                     }, 50);
                 }, 500);
             } else {
-                // Error - shake animation
+                // Error Shake Animation
                 errorDiv.style.display = 'block';
                 const card = document.querySelector('.login-card');
                 card.style.animation = 'none';
@@ -393,7 +362,7 @@
             }
         });
 
-        // Añadir animación shake
+        // Add shake animation dynamically
         const styleSheet = document.createElement("style");
         styleSheet.innerText = `
             @keyframes shake {
