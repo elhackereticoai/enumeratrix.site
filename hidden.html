@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔒 ACCESO RESTRINGIDO - Nivel 7</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-panel: #12121a;
+            --primary: #00ff88;
+            --secondary: #00d4ff;
+            --accent: #ff0055;
+            --warning: #ffaa00;
+            --text: #e0e0e0;
+            --text-dim: #666680;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background: var(--bg-dark);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated background grid */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 136, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 136, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Scanline effect */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.1) 0px,
+                rgba(0, 0, 0, 0.1) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Token Login Page */
+        .token-login {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .token-box {
+            background: var(--bg-panel);
+            border: 2px solid var(--primary);
+            border-radius: 15px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .token-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            animation: scan 2s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .token-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { text-shadow: 0 0 20px var(--primary); }
+            50% { text-shadow: 0 0 40px var(--primary), 0 0 60px var(--primary); }
+        }
+
+        .token-title {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .token-subtitle {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        .token-input {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--text-dim);
+            border-radius: 8px;
+            color: var(--primary);
+            font-family: 'Fira Code', monospace;
+            font-size: 1.1rem;
+            text-align: center;
+            letter-spacing: 3px;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .token-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .token-input::placeholder {
+            color: var(--text-dim);
+            letter-spacing: 1px;
+        }
+
+        .btn-validate {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 8px;
+            color: var(--bg-dark);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-validate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.4);
+        }
+
+        .error-msg {
+            color: var(--accent);
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            display: none;
+            padding: 0.75rem;
+            background: rgba(255, 0, 85, 0.1);
+            border-radius: 8px;
+            border: 1px solid var(--accent);
+        }
+
+        .hint {
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--text-dim);
+        }
+
+        /* Main Content (Hidden by default) */
+        .main-content {
+            display: none;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 3rem 0;
+            border-bottom: 2px solid var(--primary);
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .header::before {
+            content: '⚠️ ZONA RESTRINGIDA ⚠️';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-dark);
+            padding: 0 2rem;
+            color: var(--accent);
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .logo {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-dim);
+            font-size: 1rem;
+        }
+
+        /* Status Panel */
+        .status-panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--primary);
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            animation: scan 3s linear infinite;
+        }
+
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        .status-row:last-child {
+            border-bottom: none;
+        }
+
+        .status-label {
+            color: var(--text-dim);
+        }
+
+        .status-value {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .status-value.warning {
+            color: var(--warning);
+        }
+
+        .status-value.danger {
+            color: var(--accent);
+        }
+
+        /* Main Content */
+        .content-box {
+            background: var(--bg-panel);
+            border: 1px solid var(--secondary);
+            border-radius: 10px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .welcome-message {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .agent-info {
+            background: rgba(0, 212, 255, 0.1);
+            border-left: 4px solid var(--secondary);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .agent-info h3 {
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .agent-info p {
+            color: var(--text-dim);
+            line-height: 1.8;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Flag Display */
+        .flag-container {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 212, 255, 0.1));
+            border: 2px solid var(--primary);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .flag-container::before {
+            content: '🏆 FLAG CAPTURADA 🏆';
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            color: var(--primary);
+            letter-spacing: 2px;
+        }
+
+        .flag-label {
+            color: var(--text-dim);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .flag-value {
+            font-family: 'Fira Code', monospace;
+            font-size: 1.8rem;
+            color: var(--primary);
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            display: inline-block;
+            letter-spacing: 2px;
+            animation: flagGlow 2s infinite;
+        }
+
+        @keyframes flagGlow {
+            0%, 100% { 
+                text-shadow: 0 0 10px var(--primary);
+                box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+            }
+            50% { 
+                text-shadow: 0 0 30px var(--primary), 0 0 50px var(--primary);
+                box-shadow: 0 0 40px rgba(0, 255, 136, 0.5);
+            }
+        }
+
+        /* Terminal Section */
+        .terminal {
+            background: #000;
+            border: 1px solid var(--text-dim);
+            border-radius: 10px;
+            padding: 1.5rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            margin: 2rem 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .terminal-header {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--text-dim);
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot.red { background: #ff5f56; }
+        .terminal-dot.yellow { background: #ffbd2e; }
+        .terminal-dot.green { background: #27ca40; }
+
+        .terminal-content {
+            color: var(--primary);
+            line-height: 1.8;
+        }
+
+        .terminal-line {
+            margin-bottom: 0.5rem;
+        }
+
+        .terminal-line.success { color: var(--primary); }
+        .terminal-line.warning { color: var(--warning); }
+        .terminal-line.error { color: var(--accent); }
+        .terminal-line.info { color: var(--secondary); }
+
+        /* Mission Brief */
+        .mission-brief {
+            background: rgba(255, 0, 85, 0.1);
+            border: 1px solid var(--accent);
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .mission-brief h3 {
+            color: var(--accent);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .mission-brief ul {
+            list-style: none;
+            padding-left: 1rem;
+        }
+
+        .mission-brief li {
+            padding: 0.5rem 0;
+            color: var(--text-dim);
+            position: relative;
+        }
+
+        .mission-brief li::before {
+            content: '►';
+            color: var(--accent);
+            position: absolute;
+            left: -1rem;
+        }
+
+        .mission-brief li.completed {
+            color: var(--primary);
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+
+        .mission-brief li.completed::before {
+            content: '✓';
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 1px solid var(--text-dim);
+            margin-top: 3rem;
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+
+        .footer a {
+            color: var(--secondary);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Particle effect */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: floatParticle 10s infinite;
+        }
+
+        @keyframes floatParticle {
+            0%, 100% { 
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 0.3; }
+            90% { opacity: 0.3; }
+            100% { 
+                transform: translateY(-100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .title { font-size: 1.8rem; }
+            .flag-value { font-size: 1.2rem; padding: 0.75rem 1rem; }
+            .status-row { flex-direction: column; gap: 0.25rem; }
+        }
+
+        /* Shake animation for error */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+            20%, 40%, 60%, 80% { transform: translateX(10px); }
+        }
+
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+    <div class="scanlines"></div>
+    <div class="particles" id="particles"></div>
+
+    <!-- TOKEN LOGIN PAGE -->
+    <div id="tokenLogin" class="token-login">
+        <div class="token-box" id="tokenBox">
+            <div class="token-icon">🔑</div>
+            <h2 class="token-title">Token de Acceso Requerido</h2>
+            <p class="token-subtitle">Introduce el token para validar tu identidad</p>
+            
+            <form id="tokenForm">
+                <input type="text" id="tokenInput" class="token-input" placeholder="X-X-X-X-X-X-X-X-X" maxlength="12" autocomplete="off">
+                <button type="submit" class="btn-validate">Validar Token</button>
+            </form>
+            
+            <div id="errorMsg" class="error-msg">
+                ⚠️ Token inválido. Acceso denegado.
+            </div>
+            
+            <div class="hint">
+                💡 Pista: El token se encuentra en config.json
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT (Hidden until token validated) -->
+    <div id="mainContent" class="container main-content">
+        <header class="header">
+            <div class="logo">🛡️</div>
+            <h1 class="title">Servidor Oculto</h1>
+            <p class="subtitle">Nivel de Acceso: CLASIFICADO</p>
+        </header>
+
+        <div class="status-panel">
+            <div class="status-row">
+                <span class="status-label">Estado del Sistema</span>
+                <span class="status-value">● EN LÍNEA</span>
+            </div>
+            <div class="status-row">
+                <span class="status-label">Conexión</span>
+                <span class="status-value"> cifrada (AES-256)</span>
+            </div>
+            <div class="status-row">
+                <span class="status-label">Ubicación</span>
+                <span class="status-value warning">Servidor Remoto - Zona 7</span>
+            </div>
+            <div class="status-row">
+                <span class="status-label">Tiempo de Sesión</span>
+                <span class="status-value" id="sessionTime">00:00:00</span>
+            </div>
+            <div class="status-row">
+                <span class="status-label">Nivel de Amenaza</span>
+                <span class="status-value danger">ALTO</span>
+            </div>
+            <div class="status-row">
+                <span class="status-label">Token Validado</span>
+                <span class="status-value" id="validatedToken">************</span>
+            </div>
+        </div>
+
+        <div class="content-box">
+            <h2 class="welcome-message">
+                ¡Bienvenido, agente! Has descubierto el servidor oculto.
+            </h2>
+            
+            <div class="agent-info">
+                <h3>📋 INFORMACIÓN DE MISIÓN</h3>
+                <p>Has completado exitosamente todas las fases de infiltración.</p>
+                <p>Tu acceso a este nivel confirma que posees las credenciales necesarias para operar en la red.</p>
+                <p>La información contenida aquí es de máxima prioridad y debe ser protegida.</p>
+            </div>
+
+            <div class="flag-container">
+                <p class="flag-label">FLAG FINAL CAPTURADA</p>
+                <div class="flag-value">flag{manuel_tras_las_rejas}</div>
+            </div>
+        </div>
+
+        <div class="terminal">
+            <div class="terminal-header">
+                <div class="terminal-dot red"></div>
+                <div class="terminal-dot yellow"></div>
+                <div class="terminal-dot green"></div>
+                <span style="color: var(--text-dim); margin-left: 1rem;">terminal@secure-server:~</span>
+            </div>
+            <div class="terminal-content" id="terminalContent">
+                <div class="terminal-line info">$ inicializando_secuencia.sh</div>
+                <div class="terminal-line success">✓ Verificando credenciales... OK</div>
+                <div class="terminal-line success">✓ Autenticando agente... OK</div>
+                <div class="terminal-line success">✓ Token validado: a1b2c3d4e5f6</div>
+                <div class="terminal-line success">✓ Desencriptando datos... OK</div>
+                <div class="terminal-line warning">⚠ Detectando conexión segura...</div>
+                <div class="terminal-line success">✓ Túnel SSH establecido</div>
+                <div class="terminal-line info">$ accediendo_archivos_clasificados/</div>
+                <div class="terminal-line success">✓ 3 archivos desbloqueados</div>
+                <div class="terminal-line info">$ obteniendo_flag_final</div>
+                <div class="terminal-line success">✓ FLAG CAPTURADA: flag{manuel_tras_las_rejas}</div>
+                <div class="terminal-line success">✓ Misión completada exitosamente</div>
+                <div class="terminal-line info">$ _</div>
+            </div>
+        </div>
+
+        <div class="mission-brief">
+            <h3>🎯 OBJETIVOS COMPLETADOS</h3>
+            <ul>
+                <li class="completed">Acceder al directorio seguro /secure/documents/</li>
+                <li class="completed">Descargar plan_maestro.pdf</li>
+                <li class="completed">Encontrar config.json en backup_old/</li>
+                <li class="completed">Obtener token de config.json</li>
+                <li class="completed">Validar token en hidden.html</li>
+                <li class="completed">Capturar flag final</li>
+            </ul>
+        </div>
+
+        <div class="content-box" style="text-align: center;">
+            <h3 style="color: var(--primary); margin-bottom: 1rem;">🔐 ACCESO CONCEDIDO</h3>
+            <p style="color: var(--text-dim); margin-bottom: 1.5rem;">
+                Has demostrado las habilidades necesarias para operar en este nivel.
+            </p>
+            <p style="color: var(--secondary); font-family: 'Fira Code', monospace;">
+                token: VALIDADO<br>
+                sesión: activa<br>
+                próximo_objetivo: pendiente
+            </p>
+        </div>
+
+        <footer class="footer">
+            <p>© 2024 Sistema de Seguridad Clasificado</p>
+            <p style="margin-top: 0.5rem;">
+                <a href="#">Reportar vulnerabilidad</a> | 
+                <a href="#" onclick="logout(); return false;">Cerrar sesión</a>
+            </p>
+            <p style="margin-top: 1rem; color: var(--accent); font-size: 0.75rem;">
+                ⚠️ Toda actividad es monitoreada y registrada
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // ============================================
+        // TOKEN ENCRYPTION (XOR + REVERSE)
+        // Original token: a1b2c3d4e5f6
+        // Encrypted: 6f5e4d3c2b1a (reversed)
+        // Then XOR with key 0x42
+        // ============================================
+        
+        const ENCRYPTED_TOKEN = "252726242523272226212320";
+        const XOR_KEY = 0x42;
+        
+        // Decrypt function
+        function decryptToken(encrypted) {
+            // Step 1: Convert hex pairs to bytes and XOR
+            let bytes = [];
+            for (let i = 0; i < encrypted.length; i += 2) {
+                let hex = encrypted.substr(i, 2);
+                let byte = parseInt(hex, 16) ^ XOR_KEY;
+                bytes.push(byte);
+            }
+            
+            // Step 2: Convert to string and reverse
+            let str = bytes.map(b => String.fromCharCode(b)).join('');
+            return str.split('').reverse().join('');
+        }
+        
+        // Encrypt function (for validation)
+        function encryptToken(token) {
+            // Step 1: Reverse the token
+            let reversed = token.split('').reverse().join('');
+            
+            // Step 2: XOR each character and convert to hex
+            let hex = '';
+            for (let i = 0; i < reversed.length; i++) {
+                let byte = reversed.charCodeAt(i) ^ XOR_KEY;
+                hex += byte.toString(16).padStart(2, '0');
+            }
+            
+            return hex;
+        }
+        
+        // Get the correct token (decrypted for comparison)
+        const CORRECT_TOKEN = decryptToken(ENCRYPTED_TOKEN);
+        
+        console.log('%c🔒 ACCESO RESTRINGIDO', 'color: #00ff88; font-size: 24px; font-weight: bold;');
+        console.log('%cToken validation system active', 'color: #00d4ff; font-size: 14px;');
+
+        // Token form handler
+        document.getElementById('tokenForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const tokenInput = document.getElementById('tokenInput').value.trim();
+            const errorMsg = document.getElementById('errorMsg');
+            const tokenBox = document.getElementById('tokenBox');
+            
+            // Encrypt user input and compare with stored encrypted token
+            const encryptedInput = encryptToken(tokenInput);
+            
+            if (encryptedInput === ENCRYPTED_TOKEN) {
+                // Success - show main content
+                sessionStorage.setItem('tokenValidated', 'true');
+                sessionStorage.setItem('validatedToken', tokenInput);
+                document.getElementById('tokenLogin').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+                document.getElementById('validatedToken').textContent = tokenInput;
+                initMainContent();
+            } else {
+                // Error - shake animation
+                errorMsg.style.display = 'block';
+                tokenBox.classList.add('shake');
+                setTimeout(() => {
+                    tokenBox.classList.remove('shake');
+                }, 500);
+            }
+        });
+
+        // Check if already validated
+        window.addEventListener('load', function() {
+            if (sessionStorage.getItem('tokenValidated') === 'true') {
+                document.getElementById('tokenLogin').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+                document.getElementById('validatedToken').textContent = sessionStorage.getItem('validatedToken');
+                initMainContent();
+            }
+        });
+
+        // Initialize main content
+        function initMainContent() {
+            // Session timer
+            let seconds = 0;
+            function updateSessionTime() {
+                seconds++;
+                const hrs = Math.floor(seconds / 3600).toString().padStart(2, '0');
+                const mins = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
+                const secs = (seconds % 60).toString().padStart(2, '0');
+                document.getElementById('sessionTime').textContent = `${hrs}:${mins}:${secs}`;
+            }
+            setInterval(updateSessionTime, 1000);
+
+            // Create particles
+            createParticles();
+
+            // Terminal animation
+            animateTerminal();
+        }
+
+        // Create particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 10 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        // Terminal animation
+        function animateTerminal() {
+            const terminalLines = document.querySelectorAll('.terminal-line');
+            terminalLines.forEach((line, index) => {
+                line.style.opacity = '0';
+                setTimeout(() => {
+                    line.style.opacity = '1';
+                    line.style.transition = 'opacity 0.3s';
+                }, index * 300);
+            });
+        }
+
+        // Logout function
+        function logout() {
+            sessionStorage.removeItem('tokenValidated');
+            sessionStorage.removeItem('validatedToken');
+            location.reload();
+        }
+    </script>
+</body>
+</html>
+
