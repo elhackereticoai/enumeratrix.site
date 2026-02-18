@@ -38,7 +38,6 @@
             position: relative;
         }
 
-        /* Background Animation Elements */
         body::before {
             content: '';
             position: absolute;
@@ -68,7 +67,6 @@
             50% { transform: translate(30px, 30px) rotate(5deg); }
         }
         
-        /* Login Container */
         .login-wrapper {
             position: relative;
             z-index: 10;
@@ -195,7 +193,6 @@
             color: var(--primary);
         }
 
-        /* Info Page Styles */
         .info-container {
             max-width: 800px;
             text-align: center;
@@ -259,7 +256,6 @@
 </head>
 <body>
 
-    <!-- LOGIN PAGE CONTENT -->
     <div id="login-page" class="login-wrapper">
         <div class="login-card">
             <div class="logo-area">
@@ -290,7 +286,6 @@
         </div>
     </div>
 
-    <!-- INFO PAGE CONTENT (Hidden by default) -->
     <div id="info-page" class="info-container" style="display: none;">
         <div class="info-card">
             <span class="success-icon">🔓</span>
@@ -305,45 +300,29 @@
     <script>
         // ============================================
         // CREDENTIALS ENCRYPTED WITH ROT47 CIPHER
-        // ROT47 shifts each printable ASCII char by 47 positions
-        // Range: ASCII 33-126 (94 characters)
         // ============================================
-        // 
-        // Original: phishbroker
-        // ROT47: A9:D93C@<6C
-        //
-        // Original: phishbroker123
-        // ROT47: A9:D93C@<6C`ab
+        // phishbroker -> A9:D93C@<6C
+        // phishbroker123 -> A9:D93C@<6C`ab
         // ============================================
         
         const ENCRYPTED_USER = "A9:D93C@<6C";
         const ENCRYPTED_PASS = "A9:D93C@<6C`ab";
         
         // ============================================
-        // OBFUSCATED PASTEBIN URL
-        // URL is split into hex-encoded segments
-        // Then XOR'd with key to further obfuscate
+        // OBFUSCATED PASTEBIN URL (XOR + Hex encoded)
+        // https://pastebin.com/6xvvQ5NF
         // ============================================
         const URL_PARTS = [
-            "707073",  // h t t p s
-            "3a2f2f",  // : / /
-            "706173",  // p a s
-            "746562",  // t e b
-            "696e2e",  // i n .
-            "636f6d",  // c o m
-            "2f3678",  // / 6 x
-            "767651",  // v v Q
-            "354e46"   // 5 N F
+            "707073", "3a2f2f", "706173", "746562",
+            "696e2e", "636f6d", "2f3678", "767651", "354e46"
         ];
         
         const XOR_KEY = 0x42;
 
-        // ROT47 encryption/decryption function (symmetric)
         function rot47(str) {
             let result = '';
             for (let i = 0; i < str.length; i++) {
                 let charCode = str.charCodeAt(i);
-                // ROT47 works on printable ASCII (33-126)
                 if (charCode >= 33 && charCode <= 126) {
                     charCode = ((charCode - 33 + 47) % 94) + 33;
                 }
@@ -352,7 +331,6 @@
             return result;
         }
 
-        // Decode the obfuscated URL
         function decodeURL() {
             let hexString = URL_PARTS.join('');
             let decoded = '';
@@ -364,7 +342,6 @@
             return decoded;
         }
 
-        // Login form handler
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -372,12 +349,10 @@
             const passIn = document.getElementById('password').value;
             const errorDiv = document.getElementById('errorMsg');
             
-            // Encrypt user input using ROT47 and compare
             const encryptedUser = rot47(userIn);
             const encryptedPass = rot47(passIn);
 
             if (encryptedUser === ENCRYPTED_USER && encryptedPass === ENCRYPTED_PASS) {
-                // Success Animation
                 errorDiv.style.display = 'none';
                 document.getElementById('login-page').style.opacity = '0';
                 document.getElementById('login-page').style.transform = 'translateY(-20px)';
@@ -386,12 +361,10 @@
                     document.getElementById('login-page').style.display = 'none';
                     document.getElementById('info-page').style.display = 'block';
                     
-                    // Decode and set the secret URL
                     const secretURL = decodeURL();
                     document.getElementById('secretLink').href = secretURL;
                     document.getElementById('secretLink').textContent = secretURL;
                     
-                    // Simple fade in for info page
                     document.getElementById('info-page').style.opacity = '0';
                     setTimeout(() => {
                         document.getElementById('info-page').style.transition = 'opacity 0.5s';
@@ -399,7 +372,6 @@
                     }, 50);
                 }, 500);
             } else {
-                // Error Shake Animation
                 errorDiv.style.display = 'block';
                 const card = document.querySelector('.login-card');
                 card.style.animation = 'none';
@@ -408,7 +380,6 @@
             }
         });
 
-        // Add shake animation dynamically
         const styleSheet = document.createElement("style");
         styleSheet.innerText = `
             @keyframes shake {
