@@ -596,6 +596,10 @@
             <div id="errorMsg" class="error-msg">
                 ⚠️ Token inválido. Acceso denegado.
             </div>
+            
+            <div class="hint">
+                💡 Pista: El token se encuentra en config.json
+            </div>
         </div>
     </div>
 
@@ -720,10 +724,10 @@
         // ============================================
         // 
         // Original token: a1b2c3d4e5f6
-        // ROT47 Encrypted: o?p@qArBsCtD
+        // ROT47 Encrypted: 2`3a4b5c6d7e
         // ============================================
         
-        const ENCRYPTED_TOKEN = "o?p@qArBsCtD";
+        const ENCRYPTED_TOKEN = "2`3a4b5c6d7e";
         
         // ROT47 encryption/decryption function (symmetric)
         function rot47(str) {
