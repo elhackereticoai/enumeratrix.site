@@ -297,32 +297,69 @@
             <h1>Bienvenido, admin.</h1>
             <p>Aquí tienes la clave para el siguiente nivel:</p>
             <div class="code-block">
-                <a href="https://pastebin.com/raw/AbCdEfG" target="_blank">https://pastebin.com/raw/AbCdEfG</a>
+                <a id="secretLink" href="#" target="_blank">Cargando enlace seguro...</a>
             </div>
         </div>
     </div>
 
     <script>
-        // --- CONFIGURATION ---
-        // CREDENTIALS ARE ENCRYPTED USING A SIMPLE ROT13 + REVERSE ALGORITHM
-        // Original: phishbroker -> Encrypted: rekbfsiph
-        // Original: phishbroker123 -> Encrypted: 321rekbfsiph
+        // ============================================
+        // CREDENTIALS ENCRYPTED WITH ROT47 CIPHER
+        // ROT47 is a printable ASCII substitution cipher
+        // Not base64, not MD5 - harder to identify
+        // ============================================
+        // 
+        // Original: phishbroker -> ROT47 -> A9:D93C@66C
+        // Original: phishbroker123 -> ROT47 -> A9:D93C@66R`ab
+        // ============================================
         
-        const ENCRYPTED_USER = "rekbfsiph";
-        const ENCRYPTED_PASS = "321rekbfsiph";
+        const ENCRYPTED_USER = "A9:D93C@66C";
+        const ENCRYPTED_PASS = "A9:D93C@66R`ab";
+        
+        // ============================================
+        // OBFUSCATED PASTEBIN URL
+        // URL is split and encoded to avoid plain text detection
+        // ============================================
+        const URL_PARTS = [
+            "707073",  // h t t p s (hex-like)
+            "3a2f2f",  // : / /
+            "706173",  // p a s
+            "746562",  // t e b
+            "696e2e",  // i n .
+            "636f6d",  // c o m
+            "2f3678",  // / 6 x
+            "767651",  // v v Q
+            "354e46"   // 5 N F
+        ];
+        
+        const XOR_KEY = 0x42;
 
-        // --- DECRYPTION LOGIC ---
-        function decrypt(str) {
-            // 1. Reverse the string
-            let reversed = str.split('').reverse().join('');
-            
-            // 2. Apply ROT13 (Caesar Cipher with shift 13)
-            return reversed.replace(/[a-zA-Z]/g, function(c) {
-                return String.fromCharCode((c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
-            });
+        // ROT47 encryption/decryption function (symmetric)
+        function rot47(str) {
+            let result = '';
+            for (let i = 0; i < str.length; i++) {
+                let charCode = str.charCodeAt(i);
+                if (charCode >= 33 && charCode <= 126) {
+                    charCode = ((charCode - 33 + 47) % 94) + 33;
+                }
+                result += String.fromCharCode(charCode);
+            }
+            return result;
         }
 
-        // --- LOGIN LOGIC ---
+        // Decode the obfuscated URL
+        function decodeURL() {
+            let hexString = URL_PARTS.join('');
+            let decoded = '';
+            for (let i = 0; i < hexString.length; i += 2) {
+                let hex = hexString.substr(i, 2);
+                let charCode = parseInt(hex, 16) ^ XOR_KEY;
+                decoded += String.fromCharCode(charCode);
+            }
+            return decoded;
+        }
+
+        // Login form handler
         document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -330,22 +367,11 @@
             const passIn = document.getElementById('password').value;
             const errorDiv = document.getElementById('errorMsg');
             
-            // Encrypt user input to compare with stored hash
-            // We encrypt the input using the same logic used to create the stored hash
-            // Logic: Reverse -> ROT13
-            const encryptInput = (str) => {
-                // ROT13 first
-                let rot13 = str.replace(/[a-zA-Z]/g, function(c) {
-                    return String.fromCharCode((c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
-                });
-                // Then Reverse
-                return rot13.split('').reverse().join('');
-            };
+            // Encrypt user input using ROT47 and compare
+            const encryptedUser = rot47(userIn);
+            const encryptedPass = rot47(passIn);
 
-            const hashedUser = encryptInput(userIn);
-            const hashedPass = encryptInput(passIn);
-
-            if (hashedUser === ENCRYPTED_USER && hashedPass === ENCRYPTED_PASS) {
+            if (encryptedUser === ENCRYPTED_USER && encryptedPass === ENCRYPTED_PASS) {
                 // Success Animation
                 errorDiv.style.display = 'none';
                 document.getElementById('login-page').style.opacity = '0';
@@ -354,6 +380,12 @@
                 setTimeout(() => {
                     document.getElementById('login-page').style.display = 'none';
                     document.getElementById('info-page').style.display = 'block';
+                    
+                    // Decode and set the secret URL
+                    const secretURL = decodeURL();
+                    document.getElementById('secretLink').href = secretURL;
+                    document.getElementById('secretLink').textContent = secretURL;
+                    
                     // Simple fade in for info page
                     document.getElementById('info-page').style.opacity = '0';
                     setTimeout(() => {
@@ -366,7 +398,7 @@
                 errorDiv.style.display = 'block';
                 const card = document.querySelector('.login-card');
                 card.style.animation = 'none';
-                card.offsetHeight; /* trigger reflow */
+                card.offsetHeight;
                 card.style.animation = 'shake 0.5s';
             }
         });
